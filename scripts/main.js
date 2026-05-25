@@ -11,14 +11,12 @@ const ThemeManager = {
       this.setTheme(prefersDark ? 'dark' : 'light');
     }
 
-    // Listen for system preference changes
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
       if (!this.getStoredTheme()) {
         this.setTheme(e.matches ? 'dark' : 'light');
       }
     });
 
-    // Bind toggle button
     const toggleBtn = document.querySelector('.theme-toggle');
     if (toggleBtn) {
       toggleBtn.addEventListener('click', () => this.toggle());
@@ -52,13 +50,10 @@ const ThemeManager = {
   storeTheme(theme) {
     try {
       localStorage.setItem(this.STORAGE_KEY, theme);
-    } catch (e) {
-      // localStorage unavailable (e.g. private browsing) — silently ignore
-    }
+    } catch (e) {}
   }
 };
 
-// Project Renderer Module
 const ProjectRenderer = {
   render(projects, container) {
     if (!container) return;
@@ -102,7 +97,6 @@ const ProjectRenderer = {
   }
 };
 
-// Skills Renderer Module
 const SkillsRenderer = {
   render(skills, container) {
     if (!container) return;
@@ -138,24 +132,27 @@ const SkillsRenderer = {
   }
 };
 
-// Contact Renderer Module
 const ContactRenderer = {
   icons: {
-    github: '&#xe900;', // placeholder — replaced by SVG below
-    linkedin: '&#xe901;',
-    email: '&#xe902;'
+    github: "&#xe900;",
+    linkedin: "&#xe901;",
+    email: "&#xe902;",
   },
 
   render(social, container) {
     if (!container) return;
-    container.innerHTML = '';
+    container.innerHTML = "";
     if (!social) return;
 
     if (social.github) {
-      container.appendChild(this.createLink(social.github, 'GitHub', this.githubSvg()));
+      container.appendChild(
+        this.createLink(social.github, "GitHub", this.githubSvg()),
+      );
     }
     if (social.linkedin) {
-      container.appendChild(this.createLink(social.linkedin, 'LinkedIn', this.linkedinSvg()));
+      container.appendChild(
+        this.createLink(social.linkedin, "LinkedIn", this.linkedinSvg()),
+      );
     }
     if (social.email) {
       container.appendChild(this.createEmailLink(social.email));
@@ -163,22 +160,22 @@ const ContactRenderer = {
   },
 
   createLink(url, label, iconHtml) {
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
-    a.target = '_blank';
-    a.rel = 'noopener noreferrer';
-    a.className = 'social-link';
-    a.setAttribute('aria-label', label);
+    a.target = "_blank";
+    a.rel = "noopener noreferrer";
+    a.className = "social-link";
+    a.setAttribute("aria-label", label);
     a.innerHTML = iconHtml + `<span>${label}</span>`;
     return a;
   },
 
   createEmailLink(email) {
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = `mailto:${email}`;
-    a.className = 'social-link';
-    a.setAttribute('aria-label', 'Email');
-    a.innerHTML = this.emailSvg() + '<span>Email</span>';
+    a.className = "social-link";
+    a.setAttribute("aria-label", "Email");
+    a.innerHTML = this.emailSvg() + "<span>Email</span>";
     return a;
   },
 
@@ -192,10 +189,9 @@ const ContactRenderer = {
 
   emailSvg() {
     return '<svg class="social-icon" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path fill="currentColor" d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>';
-  }
+  },
 };
 
-// Navigation Module
 const Navigation = {
   init() {
     this.navLinks = document.querySelectorAll('.nav-links a');
@@ -216,15 +212,13 @@ const Navigation = {
           e.preventDefault();
           const target = document.querySelector(href);
           if (target) {
-            target.scrollIntoView({ behavior: 'smooth' });
+            target.scrollIntoView({ behavior: "smooth" });
           }
-          // Close mobile menu after navigation
           this.closeMobileMenu();
         }
       });
     });
 
-    // Also handle CTA button smooth scroll
     const ctaButton = document.querySelector('.cta-button');
     if (ctaButton) {
       ctaButton.addEventListener('click', (e) => {
@@ -274,7 +268,6 @@ const Navigation = {
       this.toggleMobileMenu();
     });
 
-    // Close menu on Escape key
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && this.navMenu.classList.contains('open')) {
         this.closeMobileMenu();
@@ -298,7 +291,6 @@ const Navigation = {
   }
 };
 
-// Animations Module
 const Animations = {
   init() {
     this.observeSections();
@@ -345,34 +337,28 @@ const Animations = {
   }
 };
 
-// Initialize on DOM ready
 document.addEventListener('DOMContentLoaded', () => {
   ThemeManager.init();
   Navigation.init();
 
-  // Render projects
   const projectsGrid = document.querySelector('.projects-grid');
   if (typeof portfolioData !== 'undefined' && portfolioData.projects) {
     ProjectRenderer.render(portfolioData.projects, projectsGrid);
   }
 
-  // Render skills
   const skillsContainer = document.querySelector('.skills-container');
   if (typeof portfolioData !== 'undefined' && portfolioData.skills) {
     SkillsRenderer.render(portfolioData.skills, skillsContainer);
   }
 
-  // Render contact/social links
   const socialContainer = document.querySelector('.social-links');
   if (typeof portfolioData !== 'undefined' && portfolioData.social) {
     ContactRenderer.render(portfolioData.social, socialContainer);
   }
 
-  // Initialize animations after content is rendered
   Animations.init();
 });
 
-// Export for testing (Node.js / module environments)
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = { ThemeManager, ProjectRenderer, SkillsRenderer, ContactRenderer, Navigation, Animations };
 }
