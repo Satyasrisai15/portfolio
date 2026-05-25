@@ -58,7 +58,7 @@ const portfolioData = {
 
   social: {
     github: "https://github.com/Satyasrisai15",
-    linkedin: "https://linkedin.com/in/vundavallisatyasrisai",
+    linkedin: "https://www.linkedin.com/in/satya-sri-sai-930712248/",
     email: "vundavallisatyasrisai@gmail.com",
   },
 };
